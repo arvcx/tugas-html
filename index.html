@@ -1,207 +1,650 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tugas Oka</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tang Jacket — Nexus Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <script src="https://cdn.tailwindcss.com"></script>
+:root {
+  --bg: #F2EEE6;
+  --ink: #1A1814;
+  --ink-2: #3D3A35;
+  --ink-3: #7A746C;
+  --accent: #C8A96E;
+  --accent-deep: #8B6F3A;
+  --white: #FDFBF7;
+  --border: rgba(26,24,20,0.12);
+  --shopee: #EE4D2D;
+}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+html { scroll-behavior: smooth; }
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Lora', 'serif'],
-                    },
-                    colors: {
-                        'aesthetic-bg': '#F4F1EA',
-                        'aesthetic-text': '#2C2A28',
-                        'aesthetic-muted': '#78716C',
-                        'shopee-orange': '#EE4D2D',
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 1s ease-out forwards',
-                        'slide-up': 'slideUp 0.8s ease-out forwards',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(30px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
+::selection { background: var(--ink); color: var(--bg); }
 
-        ::selection {
-            background-color: #2C2A28;
-            color: #F4F1EA;
-        }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+.cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: var(--ink);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+  mix-blend-mode: multiply;
+}
 
-        ::-webkit-scrollbar-track {
-            background: #F4F1EA;
-        }
+.cursor-ring {
+  position: fixed;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+  opacity: 0.5;
+}
 
-        ::-webkit-scrollbar-thumb {
-            background: #D6D3CD;
-            border-radius: 4px;
-        }
+.cursor.hovering { width: 6px; height: 6px; background: var(--accent); }
+.cursor-ring.hovering { width: 56px; height: 56px; border-color: var(--accent); opacity: 0.3; }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #A8A29E;
-        }
+.grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  animation: grain 0.5s steps(2) infinite;
+}
 
-        .delay-100 {
-            animation-delay: 100ms;
-        }
+@keyframes grain {
+  0%,100% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, -3%); }
+  50% { transform: translate(3%, 1%); }
+  75% { transform: translate(-1%, 3%); }
+}
 
-        .delay-200 {
-            animation-delay: 200ms;
-        }
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  z-index: 2;
+}
 
-        .delay-300 {
-            animation-delay: 300ms;
-        }
+.left-panel {
+  position: relative;
+  padding: 0;
+  background: var(--ink);
+  overflow: hidden;
+  min-height: 100vh;
+}
 
-        .opacity-0-init {
-            opacity: 0;
-        }
-    </style>
+.img-wrapper {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: scale(1.05);
+  opacity: 0;
+  animation: imgReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+}
+
+@keyframes imgReveal {
+  from { opacity: 0; transform: scale(1.12); }
+  to   { opacity: 1; transform: scale(1.05); }
+}
+
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(26,24,20,0.7) 100%
+  );
+  pointer-events: none;
+}
+
+.badge-tl {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.2s forwards;
+}
+
+.badge-tl span {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(253,251,247,0.7);
+  background: rgba(26,24,20,0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(253,251,247,0.15);
+  padding: 8px 14px;
+  border-radius: 2px;
+}
+
+.img-caption {
+  position: absolute;
+  bottom: 32px;
+  left: 32px;
+  right: 32px;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.4s forwards;
+}
+
+.img-caption-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: rgba(253,251,247,0.6);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 72px 80px 64px;
+  position: relative;
+  background: var(--bg);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.6s forwards;
+}
+
+.eyebrow-line {
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.eyebrow-text {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(52px, 6vw, 80px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.75s forwards;
+}
+
+.headline em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-2);
+  display: block;
+  font-size: 0.85em;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 36px 0;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.95s forwards;
+}
+
+.price-main {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 38px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.price-original {
+  font-size: 14px;
+  color: var(--ink-3);
+  text-decoration: line-through;
+  font-weight: 300;
+}
+
+.discount-pill {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  background: var(--accent);
+  color: var(--white);
+  padding: 5px 10px;
+  border-radius: 2px;
+}
+
+.description {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--ink-2);
+  max-width: 340px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.05s forwards;
+}
+
+.description strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.size-row {
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.1s forwards;
+}
+
+.size-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+}
+
+.sizes {
+  display: flex;
+  gap: 8px;
+}
+
+.size-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-2);
+  transition: all 0.25s ease;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.size-btn:hover, .size-btn.active {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+}
+
+.cta-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.2s forwards;
+}
+
+.cta-primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  background: var(--ink);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  border: 1px solid var(--ink);
+}
+
+.cta-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--shopee);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cta-primary:hover::before { transform: translateX(0); }
+.cta-primary:hover { border-color: var(--shopee); }
+
+.cta-primary span, .cta-primary svg {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-icon {
+  transition: transform 0.3s ease;
+}
+.cta-primary:hover .cta-icon { transform: translateX(4px); }
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 36px;
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.3s forwards;
+}
+
+.stars {
+  display: flex;
+  gap: 3px;
+}
+
+.star-svg {
+  fill: var(--accent);
+  width: 14px;
+  height: 14px;
+}
+
+.rating-text {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.rating-text strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.corner-mark {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  width: 48px;
+  height: 48px;
+  opacity: 0.15;
+}
+
+.nav-dots {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ink-3);
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  height: 20px;
+  background: var(--ink);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-rows: 55vh auto;
+  }
+
+  .left-panel { min-height: 55vh; }
+
+  .right-panel {
+    padding: 48px 28px 64px;
+  }
+
+  .headline { font-size: clamp(44px, 11vw, 60px); }
+
+  .nav-dots { display: none; }
+
+  .corner-mark { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
 </head>
+<body>
 
-<body class="bg-aesthetic-bg text-aesthetic-text font-sans antialiased">
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="grain" aria-hidden="true"></div>
 
-    <main class="min-h-screen flex items-center justify-center py-10 md:py-0">
+<div class="nav-dots" aria-hidden="true">
+  <div class="dot active"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
 
-        <div class="w-full max-w-6xl mx-auto px-6 md:px-12 lg:px-16 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 lg:gap-24 items-center">
+<main class="page">
 
-            <div class="relative w-full aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden bg-[#E8E4DB] shadow-sm opacity-0-init animate-fade-in group">
+  <section class="left-panel" aria-label="Product image">
+    <div class="img-wrapper" id="imgWrapper">
+      <img
+        src="./images/product.png"
+        alt="Tang Jacket — warna coklat premium, bahan cotton fleece"
+        class="product-img"
+        id="productImg"
+      >
+      <div class="img-overlay"></div>
+    </div>
 
-                <img
-                    src="./images/product.png"
-                    alt="Tang Jackets"
-                    class="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-105"
-                >
+    <div class="badge-tl">
+      <span>100% Cotton Fleece</span>
+    </div>
 
-                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-[10px] uppercase tracking-widest font-semibold text-black z-10">
-                    100% Cotton Fleece
-                </div>
+    <div class="img-caption">
+      <p class="img-caption-text">Dirancang untuk kenyamanan<br>yang tak lekang waktu.</p>
+    </div>
+  </section>
 
-            </div>
+  <section class="right-panel" aria-label="Product details">
 
-            <div class="flex flex-col justify-center text-center md:text-left">
+    <div class="eyebrow">
+      <div class="eyebrow-line" aria-hidden="true"></div>
+      <span class="eyebrow-text">Essential Collection — 2025</span>
+    </div>
 
-                <p class="text-aesthetic-muted text-xs md:text-sm tracking-[0.25em] uppercase font-medium mb-3 opacity-0-init animate-slide-up">
-                    Essential Collection
-                </p>
+    <h1 class="headline">
+      Tang<br>Jacket
+      <em>Premium.</em>
+    </h1>
 
-                <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl text-aesthetic-text mb-4 md:mb-6 leading-tight opacity-0-init animate-slide-up delay-100">
-                    Tang Jacket <br class="hidden md:block">
-                    <span class="italic text-aesthetic-muted">Premium Selection.</span>
-                </h1>
+    <div class="price-row">
+      <span class="price-main">Rp 539.000</span>
+      <span class="price-original">Rp 630.000</span>
+      <span class="discount-pill">–14%</span>
+    </div>
 
-                <div class="text-xl md:text-2xl font-medium mb-6 md:mb-8 opacity-0-init animate-slide-up delay-200">
-                    Rp 539.000
+    <p class="description">
+      Jacket fleece premium dengan <strong>desain modern</strong> yang nyaman
+      sepanjang hari. Bahan 100% cotton fleece pilihan,
+      ringan namun tetap hangat.
+      <br><br>
+      Available size: <strong>M · L · XL · XXL</strong>
+    </p>
 
-                    <span class="text-sm line-through text-gray-400 ml-2 font-normal">
-                        Rp 630.000
-                    </span>
-                </div>
+    <div class="size-row">
+      <div class="size-label">Pilih ukuran</div>
+      <div class="sizes" role="group" aria-label="Pilih ukuran">
+        <button class="size-btn" onclick="selectSize(this)">M</button>
+        <button class="size-btn active" onclick="selectSize(this)">L</button>
+        <button class="size-btn" onclick="selectSize(this)">XL</button>
+        <button class="size-btn" onclick="selectSize(this)">XXL</button>
+      </div>
+    </div>
 
-                <p class="text-aesthetic-muted text-sm md:text-base font-light leading-relaxed mb-8 md:mb-10 max-w-md mx-auto md:mx-0 opacity-0-init animate-slide-up delay-300">
-                    Jacket dengan model terbaru dan sangat nyaman digunakan
-                    <i>fleece cotton</i> Dengan menggunakan bahan premium
-                    Available size: M, L, XL, XXL
-                </p>
+    <div class="cta-area">
+      <a
+        href="https://id.shp.ee/Z15AnUt4"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="cta-primary"
+        id="ctaBtn"
+      >
+        <span>Beli Sekarang di Shopee</span>
+        <svg class="cta-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
 
-                <div class="opacity-0-init animate-slide-up delay-300">
+    <div class="rating-row">
+      <div class="stars" aria-label="Rating 5 bintang">
+        <svg class="star-svg" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+        <svg class="star-svg" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+        <svg class="star-svg" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+        <svg class="star-svg" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+        <svg class="star-svg" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+      </div>
+      <span class="rating-text"><strong>Star Seller</strong> · Terpercaya</span>
+    </div>
 
-                    <a
-                        href="https://id.shp.ee/Z15AnUt4"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="inline-flex items-center justify-center gap-3 w-full md:w-auto px-8 py-4 bg-aesthetic-text text-white text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-shopee-orange hover:shadow-[0_8px_20px_rgba(238,77,45,0.3)] hover:-translate-y-1"
-                    >
+    <svg class="corner-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="24" cy="24" r="23" stroke="#1A1814" stroke-width="0.5"/>
+      <circle cx="24" cy="24" r="18" stroke="#1A1814" stroke-width="0.5"/>
+      <circle cx="24" cy="24" r="2" fill="#1A1814"/>
+    </svg>
 
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-                            <path d="M3 6h18"></path>
-                            <path d="M16 10a4 4 0 0 1-8 0"></path>
-                        </svg>
+  </section>
 
-                        Buy Now!
+</main>
 
-                    </a>
+<script>
+(function() {
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
 
-                </div>
+  if (window.matchMedia('(pointer: fine)').matches) {
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
 
-                <div class="mt-8 pt-6 border-t border-gray-200 flex items-center justify-center md:justify-start gap-4 opacity-0-init animate-slide-up delay-300">
+    (function animRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
 
-                    <div class="flex text-yellow-400">
+    const hoverEls = document.querySelectorAll('a, button, .size-btn');
+    hoverEls.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.classList.add('hovering');
+        ring.classList.add('hovering');
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hovering');
+        ring.classList.remove('hovering');
+      });
+    });
+  }
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"></polygon>
-                        </svg>
+  const imgWrapper = document.getElementById('imgWrapper');
+  const leftPanel = imgWrapper && imgWrapper.closest('.left-panel');
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"></polygon>
-                        </svg>
+  if (leftPanel && window.matchMedia('(pointer: fine)').matches && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    leftPanel.addEventListener('mousemove', e => {
+      const rect = leftPanel.getBoundingClientRect();
+      const cx = (e.clientX - rect.left) / rect.width - 0.5;
+      const cy = (e.clientY - rect.top) / rect.height - 0.5;
+      imgWrapper.style.transform = `translate(${cx * -12}px, ${cy * -10}px) scale(1.04)`;
+    });
+    leftPanel.addEventListener('mouseleave', () => {
+      imgWrapper.style.transform = '';
+      imgWrapper.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      setTimeout(() => { imgWrapper.style.transition = ''; }, 800);
+    });
+  }
+})();
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"></polygon>
-                        </svg>
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"></polygon>
-                        </svg>
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"></polygon>
-                        </svg>
-
-                    </div>
-
-                    <span class="text-xs text-aesthetic-muted font-medium">
-                        % Star Seller
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </main>
-
+function selectSize(btn) {
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>
